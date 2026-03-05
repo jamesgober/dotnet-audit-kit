@@ -1,0 +1,322 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JG.AuditKit</name>
+    </assembly>
+    <members>
+        <member name="T:JG.AuditKit.Abstractions.IAuditFilter">
+            <summary>
+            Determines whether an audit entry should be recorded.
+            </summary>
+            <remarks>
+            Implementations must be thread-safe.
+            </remarks>
+        </member>
+        <member name="M:JG.AuditKit.Abstractions.IAuditFilter.ShouldWrite(JG.AuditKit.AuditEntry)">
+            <summary>
+            Evaluates whether the specified entry should be written.
+            </summary>
+            <param name="entry">The audit entry candidate.</param>
+            <returns><see langword="true"/> when the entry should be written; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="T:JG.AuditKit.Abstractions.IAuditLog">
+            <summary>
+            Writes immutable audit entries to the configured audit pipeline.
+            </summary>
+            <remarks>
+            Implementations are thread-safe and designed for concurrent use across multiple request threads.
+            </remarks>
+        </member>
+        <member name="M:JG.AuditKit.Abstractions.IAuditLog.WriteAsync(JG.AuditKit.AuditEntry,System.Threading.CancellationToken)">
+            <summary>
+            Enqueues an audit entry for asynchronous processing.
+            </summary>
+            <param name="entry">The audit entry to write.</param>
+            <param name="cancellationToken">A cancellation token that can stop enqueueing.</param>
+            <returns>A task that completes when the entry is accepted or skipped by filters.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="entry"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="T:JG.AuditKit.Abstractions.IAuditSink">
+            <summary>
+            Writes accepted audit entries to a storage destination.
+            </summary>
+            <remarks>
+            Implementations must be thread-safe and must not throw for recoverable write failures.
+            </remarks>
+        </member>
+        <member name="M:JG.AuditKit.Abstractions.IAuditSink.WriteAsync(JG.AuditKit.AuditEntry,System.Threading.CancellationToken)">
+            <summary>
+            Writes a single audit entry to the sink.
+            </summary>
+            <param name="entry">The audit entry.</param>
+            <param name="cancellationToken">A cancellation token.</param>
+            <returns>A task that represents the write operation.</returns>
+        </member>
+        <member name="T:JG.AuditKit.AuditChainVerificationResult">
+            <summary>
+            Represents the result of an audit hash chain verification run.
+            </summary>
+        </member>
+        <member name="M:JG.AuditKit.AuditChainVerificationResult.#ctor(System.Boolean,System.Int32,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:JG.AuditKit.AuditChainVerificationResult"/> struct.
+            </summary>
+            <param name="isValid">Indicates whether the chain is valid.</param>
+            <param name="invalidIndex">The first invalid entry index, or <c>-1</c> when valid.</param>
+            <param name="expectedHash">The expected hash value at the invalid entry.</param>
+            <param name="actualHash">The actual hash value at the invalid entry.</param>
+        </member>
+        <member name="P:JG.AuditKit.AuditChainVerificationResult.IsValid">
+            <summary>
+            Gets a value indicating whether the chain is valid.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditChainVerificationResult.InvalidIndex">
+            <summary>
+            Gets the first invalid entry index, or <c>-1</c> when valid.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditChainVerificationResult.ExpectedHash">
+            <summary>
+            Gets the expected hash at the invalid index.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditChainVerificationResult.ActualHash">
+            <summary>
+            Gets the actual hash at the invalid index.
+            </summary>
+        </member>
+        <member name="T:JG.AuditKit.AuditEntry">
+            <summary>
+            Represents one immutable audit event.
+            </summary>
+        </member>
+        <member name="M:JG.AuditKit.AuditEntry.#ctor(System.String,System.String,System.String,System.DateTimeOffset,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String},System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:JG.AuditKit.AuditEntry"/> class.
+            </summary>
+            <param name="actor">The actor who performed the action.</param>
+            <param name="action">The action that occurred.</param>
+            <param name="resource">The resource that was targeted.</param>
+            <param name="timestamp">The event timestamp.</param>
+            <param name="correlationId">The correlation identifier for tracing.</param>
+            <param name="metadata">Additional key/value metadata.</param>
+            <param name="previousHash">The previous chain hash.</param>
+            <param name="hash">The current entry chain hash.</param>
+            <exception cref="T:System.ArgumentException">Thrown when required string values are empty.</exception>
+        </member>
+        <member name="P:JG.AuditKit.AuditEntry.Actor">
+            <summary>
+            Gets the actor who performed the action.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditEntry.Action">
+            <summary>
+            Gets the action that occurred.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditEntry.Resource">
+            <summary>
+            Gets the target resource.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditEntry.Timestamp">
+            <summary>
+            Gets the event timestamp.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditEntry.CorrelationId">
+            <summary>
+            Gets the correlation identifier for request or workflow tracing.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditEntry.Metadata">
+            <summary>
+            Gets additional context metadata.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditEntry.PreviousHash">
+            <summary>
+            Gets the hash of the previous entry in the chain.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditEntry.Hash">
+            <summary>
+            Gets the hash for this entry.
+            </summary>
+        </member>
+        <member name="T:JG.AuditKit.AuditHashChainVerifier">
+            <summary>
+            Verifies SHA-256 hash chain integrity for a sequence of audit entries.
+            </summary>
+        </member>
+        <member name="M:JG.AuditKit.AuditHashChainVerifier.Verify(System.Collections.Generic.IEnumerable{JG.AuditKit.AuditEntry},System.String,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Verifies chain integrity from the specified seed hash.
+            </summary>
+            <param name="entries">The entries to verify in order.</param>
+            <param name="seed">The initial hash seed.</param>
+            <param name="logger">An optional logger for chain break diagnostics.</param>
+            <returns>The chain verification result.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="entries"/> or <paramref name="seed"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="T:JG.AuditKit.AuditKitOptions">
+            <summary>
+            Configures <c>JG.AuditKit</c> behavior.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditKitOptions.DefaultSinkTypes">
+            <summary>
+            Gets the default sink service types that are registered by <c>AddAuditKit</c>.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditKitOptions.DefaultFilterTypes">
+            <summary>
+            Gets the default filter service types that are registered by <c>AddAuditKit</c>.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditKitOptions.HashSeed">
+            <summary>
+            Gets or sets the hash seed for the first chain entry.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditKitOptions.EnableHashChaining">
+            <summary>
+            Gets or sets a value indicating whether hash chaining is enabled.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditKitOptions.TimeProvider">
+            <summary>
+            Gets or sets the clock used to resolve timestamps.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditKitOptions.ChannelCapacity">
+            <summary>
+            Gets or sets the channel capacity used by the internal audit queue.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.AuditKitOptions.FileSink">
+            <summary>
+            Gets file sink configuration used by <see cref="P:JG.AuditKit.AuditKitOptions.FileSink"/>.
+            </summary>
+        </member>
+        <member name="M:JG.AuditKit.AuditKitOptions.AddDefaultSink``1">
+            <summary>
+            Adds a default sink type that is auto-registered.
+            </summary>
+            <typeparam name="TSink">The sink implementation type.</typeparam>
+        </member>
+        <member name="M:JG.AuditKit.AuditKitOptions.AddDefaultFilter``1">
+            <summary>
+            Adds a default filter type that is auto-registered.
+            </summary>
+            <typeparam name="TFilter">The filter implementation type.</typeparam>
+        </member>
+        <member name="T:JG.AuditKit.Sinks.ConsoleSink">
+            <summary>
+            Writes audit entries to standard output as JSON lines.
+            </summary>
+        </member>
+        <member name="M:JG.AuditKit.Sinks.ConsoleSink.WriteAsync(JG.AuditKit.AuditEntry,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:JG.AuditKit.Sinks.FileSink">
+            <summary>
+            Appends audit entries to a JSON lines file.
+            </summary>
+            <remarks>
+            Writes are serialized with an async lock to preserve line-level append ordering.
+            </remarks>
+        </member>
+        <member name="M:JG.AuditKit.Sinks.FileSink.#ctor(JG.AuditKit.Sinks.FileSinkOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:JG.AuditKit.Sinks.FileSink"/> class.
+            </summary>
+            <param name="options">The file sink options.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="options"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when configured path is empty.</exception>
+        </member>
+        <member name="M:JG.AuditKit.Sinks.FileSink.WriteAsync(JG.AuditKit.AuditEntry,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JG.AuditKit.Sinks.FileSink.Dispose">
+            <summary>
+            Releases sink resources.
+            </summary>
+        </member>
+        <member name="T:JG.AuditKit.Sinks.FileSinkOptions">
+            <summary>
+            Configures file sink behavior.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.Sinks.FileSinkOptions.Path">
+            <summary>
+            Gets or sets the base path for audit output.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.Sinks.FileSinkOptions.RollDaily">
+            <summary>
+            Gets or sets a value indicating whether to roll files daily.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.Sinks.FileSinkOptions.MaxFileSizeBytes">
+            <summary>
+            Gets or sets the maximum file size in bytes before rotation. Set to <c>null</c> to disable size-based rotation.
+            </summary>
+        </member>
+        <member name="T:JG.AuditKit.Sinks.InMemorySink">
+            <summary>
+            Stores audit entries in memory for testing and diagnostics.
+            </summary>
+            <remarks>
+            This sink is thread-safe.
+            </remarks>
+        </member>
+        <member name="P:JG.AuditKit.Sinks.InMemorySink.Entries">
+            <summary>
+            Gets a snapshot of entries written to the sink.
+            </summary>
+        </member>
+        <member name="P:JG.AuditKit.Sinks.InMemorySink.Count">
+            <summary>
+            Gets the number of entries currently stored.
+            </summary>
+        </member>
+        <member name="M:JG.AuditKit.Sinks.InMemorySink.WriteAsync(JG.AuditKit.AuditEntry,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.AuditKitServiceCollectionExtensions">
+            <summary>
+            Provides service registration APIs for <c>JG.AuditKit</c>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.AuditKitServiceCollectionExtensions.AddAuditKit(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{JG.AuditKit.AuditKitOptions})">
+            <summary>
+            Registers core audit services and default sinks and filters.
+            </summary>
+            <param name="services">The service collection.</param>
+            <param name="configure">An optional options configuration callback.</param>
+            <returns>The same service collection instance.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="services"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when configured default sink or filter types are invalid.</exception>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.AuditKitServiceCollectionExtensions.AddAuditSink``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Registers a custom audit sink.
+            </summary>
+            <typeparam name="TSink">The sink type.</typeparam>
+            <param name="services">The service collection.</param>
+            <returns>The same service collection instance.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="services"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.AuditKitServiceCollectionExtensions.AddAuditFilter``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Registers a custom audit filter.
+            </summary>
+            <typeparam name="TFilter">The filter type.</typeparam>
+            <param name="services">The service collection.</param>
+            <returns>The same service collection instance.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="services"/> is <see langword="null"/>.</exception>
+        </member>
+    </members>
+</doc>

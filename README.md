@@ -7,18 +7,18 @@
 
 ---
 
-Immutable audit logging for .NET applications. Record who did what, when, and where with tamper-evident hash chains, pluggable sinks, and non-blocking background flushing. Built for compliance patterns (SOC 2, HIPAA, PCI-DSS).
+Immutable audit logging for .NET 8 applications. Record who did what, when, where, and why with tamper-evident hash chains, filter pipelines, and non-blocking sink dispatch.
 
 ## Features
 
-- **Structured audit entries** — actor, action, resource, timestamp, correlation ID, and custom metadata
-- **Tamper-evident hash chains** — SHA-256 linked entries detect modification or deletion
-- **Pluggable sinks** — file (JSON lines), console, or custom `IAuditSink` implementations
-- **Background flushing** — `Channel<T>`-based async pipeline, never blocks the request path
-- **Batch writing** — configurable batch size and flush interval for throughput
-- **Chain verification** — replay from seed to verify integrity of the entire audit trail
-- **Date-based file rolling** — automatic log rotation for file sinks
-- **Query support** — filter by date range, actor, action, or resource pattern
+- Immutable `AuditEntry` model
+- SHA-256 hash chaining with configurable seed
+- Built-in sinks: `ConsoleSink`, `FileSink`, `InMemorySink`
+- Pluggable `IAuditSink` and `IAuditFilter`
+- Async `Channel<T>` dispatch pipeline that keeps request paths non-blocking
+- Sink failure isolation (one sink failure does not stop other sinks)
+- Hash chain verification API
+- DI extensions: `AddAuditKit`, `AddAuditSink<T>`, `AddAuditFilter<T>`
 
 ## Installation
 
@@ -29,30 +29,42 @@ dotnet add package JG.AuditKit
 ## Quick Start
 
 ```csharp
-builder.Services.AddAuditKit(options =>
-{
-    options.AddFileSink("audit.jsonl", rollByDate: true);
-    options.EnableHashChain = true;
-    options.FlushInterval = TimeSpan.FromSeconds(5);
-});
+using JG.AuditKit;
+using JG.AuditKit.Abstractions;
+using JG.AuditKit.Sinks;
 
-// Record an audit event
-await auditLog.RecordAsync(new AuditEntry
-{
-    Actor = userId,
-    Action = "user.updated",
-    Resource = $"users/{targetUserId}",
-    Metadata = new { Field = "email", OldValue = old, NewValue = updated }
-});
+builder.Services
+    .AddAuditKit(options =>
+    {
+        options.DefaultSinkTypes.Clear();
+        options.AddDefaultSink<FileSink>();
+        options.EnableHashChaining = true;
+        options.HashSeed = "my-seed";
+        options.FileSink.Path = "audit.jsonl";
+        options.FileSink.RollDaily = true;
+    })
+    .AddAuditFilter<MyAuditFilter>();
+
+// ...
+
+var auditLog = app.Services.GetRequiredService<IAuditLog>();
+
+await auditLog.WriteAsync(new AuditEntry(
+    actor: "user:42",
+    action: "write.order",
+    resource: "orders/1001",
+    timestamp: DateTimeOffset.UtcNow,
+    correlationId: "corr-123",
+    metadata: new Dictionary<string, string?>
+    {
+        ["ip"] = "10.0.0.10",
+        ["reason"] = "user-update"
+    }));
 ```
 
 ## Documentation
 
-- **[API Reference](./docs/API.md)** — Full API documentation and examples
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+- [API Reference](./docs/API.md)
 
 ## License
 

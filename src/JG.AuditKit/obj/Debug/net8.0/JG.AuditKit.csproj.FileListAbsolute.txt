@@ -1,0 +1,15 @@
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\bin\Debug\net8.0\JG.AuditKit.deps.json
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\bin\Debug\net8.0\JG.AuditKit.dll
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\bin\Debug\net8.0\JG.AuditKit.pdb
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\bin\Debug\net8.0\JG.AuditKit.xml
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\obj\Debug\net8.0\JG.AuditKit.csproj.AssemblyReference.cache
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\obj\Debug\net8.0\JG.AuditKit.GeneratedMSBuildEditorConfig.editorconfig
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\obj\Debug\net8.0\JG.AuditKit.AssemblyInfoInputs.cache
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\obj\Debug\net8.0\JG.AuditKit.AssemblyInfo.cs
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\obj\Debug\net8.0\JG.AuditKit.csproj.CoreCompileInputs.cache
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\obj\Debug\net8.0\JG.AuditKit.sourcelink.json
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\obj\Debug\net8.0\JG.AuditKit.dll
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\obj\Debug\net8.0\refint\JG.AuditKit.dll
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\obj\Debug\net8.0\JG.AuditKit.xml
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\obj\Debug\net8.0\JG.AuditKit.pdb
+C:\Dev\libs\dotnet\dotnet-audit-kit\src\JG.AuditKit\obj\Debug\net8.0\ref\JG.AuditKit.dll
