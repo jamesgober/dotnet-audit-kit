@@ -1,10 +1,11 @@
 name: CI
 
 on:
+  workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
-    branches: [main]
+    branches: [main, master]
 
 jobs:
   build:
@@ -23,10 +24,10 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
 
       - name: Restore
-        run: dotnet restore
+        run: dotnet restore tests/JG.AuditKit.Tests/JG.AuditKit.Tests.csproj
 
       - name: Build
-        run: dotnet build --no-restore --configuration Release -warnaserror
+        run: dotnet build tests/JG.AuditKit.Tests/JG.AuditKit.Tests.csproj --no-restore --configuration Release -warnaserror
 
       - name: Test
-        run: dotnet test --no-build --configuration Release --verbosity normal
+        run: dotnet test tests/JG.AuditKit.Tests/JG.AuditKit.Tests.csproj --no-build --configuration Release --verbosity normal

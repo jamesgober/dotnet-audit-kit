@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute(("Immutable audit trail library for .NET 8 with hash chaining, filters, and non-blo" +
     "cking sink dispatch."))]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eddba8f01b699ef96f65156080291bca0264937b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+76e95c00530cb46466cbccd18a68c8a0a1ff3ec0")]
 [assembly: System.Reflection.AssemblyProductAttribute("JG.AuditKit")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JG.AuditKit")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
